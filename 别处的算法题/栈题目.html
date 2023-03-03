@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 字母重复数字的倍数
+        // 将'3[2[abc]2[d]]' 变为 abcabcddabcabcddabcabcdd
+        var str = '3[2[abc]2[d]]'
+        function f(str) {
+            // 准备一个指针
+            var index = 0
+            // 准备两个空栈
+            var stack1 = [] // 存放数字
+            var stack2 = [] // 存放字母
+            // 剩余字符串
+            var rest = str
+            while (index < str.length - 1) {
+                rest = str.substring(index)
+                // console.log(rest);
+                if (/^\d+\[/.test(rest)) {
+                    // console.log('检测到数字和[');
+                    // 得到这个数字
+                    var num = Number(rest.match(/^(\d+)\[/)[1])
+                    // console.log(num);
+                    // 将数字和空字符串压栈
+                    stack1.push(num)
+                    stack2.push('')
+                    // 指针移动数字的长度加上[的长度
+                    index += num.toString.length + 1
+                } else if (/^\w+/.test(rest)) {
+                    // console.log('检测到字母');
+                    // 得到这个字母
+                    var s = rest.match(/^(\w+)/)[0]
+                    // console.log(s);
+                    // 将栈2的最后一项改为s
+                    stack2[stack2.length - 1] = s
+                    // 指针移动s字母的长度
+                    index += s.length
+                } else if (rest[0] === ']') {
+                    // 将栈1 栈2最后一项弹栈 并赋值给n1 s1
+                    var n1 = stack1.pop()
+                    var s1 = stack2.pop()
+                    // 将此时的栈2的栈顶加上 t2重复t1倍的字母
+                    stack2[stack2.length - 1] += s1.repeat(n1)
+
+                    index++
+                }
+
+                // console.log(index, stack1, stack2);
+            }
+            return stack2[0].repeat(stack1[0])
+        }
+        console.log(f(str));
+    </script>
+</body>
+
+</html>

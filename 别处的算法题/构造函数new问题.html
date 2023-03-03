@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    var print = function () { console.log(1) }
+    function Printer(brand) {
+      this.brand = brand;
+      print = function () { console.log(2) };
+      return this;
+    }
+    // Printer.print();
+    console.log(Printer);
+    console.log(new Printer());
+    Printer.print = function () { console.log(3) };
+    Printer.prototype.print = function () { console.log(4) };
+    function print() { console.log(5) };
+
+
+    Printer.print();						//3
+    print();								//1
+    Printer().print();						//2
+    new Printer.print();					//3
+    new new Printer().print();	// 4
+  </script>
+</body>
+
+</html>

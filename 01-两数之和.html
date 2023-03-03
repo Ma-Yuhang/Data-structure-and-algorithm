@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // twoSum([2,7,11,13],9)   输出：[0,1] 因为2+7=9
+    let arr = [1,4,6,8]
+    function twoSum(arr,target) {
+      const map = new Map()
+      for (let i = 0; i < arr.length; i++) {
+        const n = target - arr[i]
+        if(map.has(n)) {
+          return [map.get(n), i]
+        }
+        map.set(arr[i], i)
+      }
+    }
+    console.log(twoSum(arr,9));
+  </script>
+</body>
+</html>

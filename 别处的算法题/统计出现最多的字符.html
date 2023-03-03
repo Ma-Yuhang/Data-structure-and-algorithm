@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let str = 'adadaffjknansjkdhdba'
+        function findMax(str) {
+            if (str.length === 1) {
+                return str
+            }
+            let strObj = {}
+            for (let i = 0; i < str.length; i++) {
+                !strObj[str[i]] ? strObj[str[i]] = 1 : strObj[str[i]] += 1
+            }
+            console.log(strObj);
+            let maxChar = '',
+                maxValue = 1
+            for (const k in strObj) {
+                if (strObj[k] > maxValue) {
+                    maxChar = k
+                    maxValue = strObj[k]
+                }
+
+            }
+            return maxChar
+        }
+        console.log(findMax(str));
+    </script>
+</body>
+
+</html>

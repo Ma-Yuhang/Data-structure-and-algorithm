@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let s = 'PAYPALISHIRING';
+        // 行数
+        let numRows = 4;
+        var convert = function (s, numRows) {
+            if(numRows == 1) {
+                return s;
+            }
+            // 规定一个count
+            let count = 0;
+            // 结果数组
+            let result = new Array(numRows).fill('')
+            // 方向
+            let a = 1;
+            for (let i = 0; i < s.length; i++) {
+                result[count] += s[i];
+                count = count + a;
+                if (count == 0) {
+                    a = 1;
+                }
+                if (count == numRows - 1) {
+                    a = -1;
+                }
+            }
+            return result;
+        };
+        console.log(convert(s, numRows));
+    </script>
+</body>
+
+</html>

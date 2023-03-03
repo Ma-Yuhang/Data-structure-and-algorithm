@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let s = '32420 wiwd';
+        var myAtoi = function (s) {
+            const reg = new RegExp(/^(-|\+)?\d+/)
+            let res = null;
+            let str = s.trim().match(reg)
+            if (str == null) {
+                res = 0
+            } else {
+                res = Number(str[0])
+            }
+            return res >= 0 ? Math.min(res, 2 ** 31 - 1) : Math.max(res, (-2) ** 31)
+        };
+        console.log(myAtoi(s));
+    </script>
+</body>
+
+</html>

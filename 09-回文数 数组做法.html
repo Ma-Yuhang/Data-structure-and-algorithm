@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 比字符串做法还慢
+        let x = 121;
+        var isPalindrome = function (x) {
+            if (x < 0) {
+                return false;
+            } else {
+                x = x + '';
+                if (x.length == 1) {
+                    return true;
+                }
+                let arr = [];
+                for (let i = 0; i < x.length; i++) {
+                    arr.push(x[i]);
+                }
+                // arr ['1', '0']
+                let newArr = []
+                arr.forEach(val => {
+                    newArr.unshift(val);
+                })
+                console.log(arr.toString());
+                console.log(newArr.toString());
+                return arr.toString() == newArr.toString() ? true : false;
+            }
+        };
+        console.log(isPalindrome(x));
+    </script>
+</body>
+
+</html>
