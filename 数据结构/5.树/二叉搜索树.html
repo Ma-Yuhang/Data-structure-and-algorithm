@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    class Node {
+      constructor(key) {
+        this.key = key
+        this.left = null
+        this.right = null
+      }
+    }
+
+    class BinarySearchTree {
+      constructor() {
+        this.root = null
+        this.preOrderStr = '' // 先序遍历结果
+        this.midOrderStr = '' // 中序遍历结果
+        this.postOrderStr = '' // 后序遍历结果
+      }
+
+      // 插入节点insert
+      insert(key) {
+        // 1.先创建一个节点
+        const newNode = new Node(key)
+        // 2.判断有没有根节点
+        if (this.root === null) {
+          // 2.1 没有根节点
+          this.root = newNode
+        } else {
+          // 2.2 有根节点
+          // 递归判断
+          this.insertNode(this.root, newNode)
+        }
+      }
+
+      // 内部方法(递归)
+      insertNode(node, newNode) {
+        if (newNode.key > node.key) {
+          // 向右边查找
+          if (node.right === null) {
+            node.right = newNode
+          } else {
+            this.insertNode(node.right, newNode)
+          }
+        } else {
+          // 向左边查找
+          if (node.left === null) {
+            node.left = newNode
+          } else {
+            this.insertNode(node.left, newNode)
+          }
+        }
+      }
+
+      // 先序遍历
+      preOrderTranversal() {
+        this.preOrderStr = ''
+        return this.preOrderTranversalNode(this.root)
+      }
+      // 先序遍历内部递归方法
+      preOrderTranversalNode(node) {
+        if (node !== null) {
+          this.preOrderStr += node.key + ' '
+          this.preOrderTranversalNode(node.left)
+          this.preOrderTranversalNode(node.right)
+
+        }
+        return this.preOrderStr
+      }
+
+      // 中序遍历
+      midOrderTranversal() {
+        this.midOrderStr = ''
+        return this.midOrderTranversalNode(this.root)
+      }
+      // 中序遍历内部递归方法
+      midOrderTranversalNode(node) {
+        if (node !== null) {
+          this.midOrderTranversalNode(node.left)
+          this.midOrderStr += node.key + ' '
+          this.midOrderTranversalNode(node.right)
+
+        }
+        return this.midOrderStr
+      }
+
+      // 后序遍历
+      postOrderTranversal() {
+        this.postOrderStr = ''
+        return this.postOrderTranversalNode(this.root)
+      }
+      // 中序遍历内部递归方法
+      postOrderTranversalNode(node) {
+        if (node !== null) {
+          this.postOrderTranversalNode(node.left)
+          this.postOrderTranversalNode(node.right)
+          this.postOrderStr += node.key + ' '
+
+        }
+        return this.postOrderStr
+      }
+
+      // 最小值
+      min() {
+        let node = this.root
+        while (node.left !== null) {
+          node = node.left
+        }
+        return node.key
+      }
+
+      // 最大值
+      max() {
+        let node = this.root
+        while (node.right !== null) {
+          node = node.right
+        }
+        return node.key
+      }
+
+      // 查找某一个key
+      search(key) {
+        const node = this.root
+        while (node !== null) {
+          if (key < node.key) {
+            node.left = node
+          } else if (key > node.key) {
+            node.right = node
+          } else {
+            return true
+          }
+        }
+        return false
+      }
+    }
+
+
+    const bst = new BinarySearchTree()
+    // 插入数据
+    bst.insert(11)
+    bst.insert(7)
+    bst.insert(15)
+    bst.insert(5)
+    bst.insert(3)
+    bst.insert(9)
+    bst.insert(8)
+    bst.insert(10)
+    bst.insert(13)
+    bst.insert(12)
+    bst.insert(14)
+    bst.insert(20)
+    bst.insert(18)
+    bst.insert(25)
+    bst.insert(6)
+
+    console.log(bst.preOrderTranversal());
+    console.log(bst.midOrderTranversal());
+    console.log(bst.postOrderTranversal());
+    console.log(bst.max());
+    console.log(bst.min());
+  </script>
+</body>
+
+</html>

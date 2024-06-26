@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    class HashTable {
+      constructor() {
+        this.storage = [] // 存放数据
+        this.count = 0 // 当前hash表的长度
+        this.limit = 7 // hash表的总长度(哈希表在定义的时候就需要确定长度，到时候不够了在进行扩容)
+      }
+
+      // 哈希函数
+      // 先在一个字符串转成一个较大的数字:hashCode
+      // 再将hashCode转成数组长度范围之内的数字
+      hashFunc(str, size) {
+        // 1.定义hashCode变量
+        let hashCode = 0
+
+        // 2.霍纳法则 计算hashCode(是一个较大的数字)
+        // charCodeAt() 将一个字符转成Unicode编码
+        for(let i = 0; i < str.length; i++) {
+          hashCode = 37 * hashCode + str.charCodeAt()
+        }
+
+        // 3.取余操作(转成小数字)
+        const index = hashCode % size
+        return index
+      }
+
+      // 插入和修改操作
+      put(key, value) {
+        // 1.根据key获得对应的index
+        const index = this.hashFunc(key, this.limit)
+        // 2.根据index取出bucket(桶)
+        let bucket = this.storage[index]
+        // 3.判断此处有无bucket
+        if(bucket== null) {
+          // 3.1 没有桶就在此处创建桶
+          bucket = []
+          this.storage[index] = bucket
+        }
+        // 判断是不是修改操作
+        for(let i = 0; i < bucket.length; i++) {
+          let tuple = bucket[i]
+          if(tuple[0] == key) {
+            tuple[1] = value
+            return
+          }
+        }
+        bucket.push([key, value])
+        this.count++
+        // 判断是否需要扩容
+        if(this.count > this.limit * 0.75) {
+          // 得到一个质数
+          const prime = this.getPrime(this.limit * 2)
+          this.resize(prime)
+        }
+      }
+
+      // 查看操作
+      get(key) {
+        // 1.根据key获得对应的index
+        const index = this.hashFunc(key, this.limit)
+        // 2.根据index取出bucket(桶)
+        let bucket = this.storage[index]
+        // 3.找不到桶 证明没这个key
+        if(bucket == null) {
+          return null
+        }
+        // 4.找到了桶就遍历查找
+        for(let i = 0; i < bucket.length; i++) {
+          let tuple = bucket[i]
+          // 找到了
+          if(tuple[0] == key)
+          return tuple[1]
+        }
+        // 走到这里 证明没找到
+        return null
+      }
+    
+      // 删除操作
+      delete(key) {
+        // 1.根据key获得对应的index
+        const index = this.hashFunc(key, this.limit)
+        // 2.根据index取出bucket(桶)
+        let bucket = this.storage[index]
+        // 3.找不到桶 证明没这个key
+        if(bucket == null) {
+          return null
+        }
+        // 4.找到了桶就遍历查找
+        for(let i = 0; i < bucket.length; i++) {
+          let tuple = bucket[i]
+          // 找到了
+          if(tuple[0] == key)
+          bucket.splice(i, 1)
+          this.count--
+          // 判断是否需要缩小容量
+          if(this.limit > 7 && this.count < this.limit * 0.25) {
+            const prime = this.getPrime(Math.floor(this.limit / 2))
+            this.resize(prime)
+          }
+          return tuple[1]
+        }
+        // 走到这里 证明没找到
+        return null
+      }
+    
+      // 扩容和缩容操作
+      resize(newLimit) {
+        // 1.先保存旧的数据
+        const oldStorage = this.storage
+        // 2.清空storage
+        this.storage = []
+        this.count = 0
+        this.limit = newLimit
+        // 3.遍历旧的storage，将数据全部移动到新的storage中
+        for(let i = 0; i < oldStorage.length; i++) {
+          let bucket = oldStorage[i]
+          // 如果没有，继续下次循环
+          if(bucket == null) {
+            continue
+          }
+          for(let j = 0; j < bucket.length; j++) {
+            let tuple = bucket[j]
+            // 将数据移到新的storage中
+            this.put(tuple[0], tuple[1])
+          }
+        }
+      }
+
+      // 判断一个数是不是质数
+      isPrime(num) {
+        if(num <= 1) return false
+        // 开根号
+        const n = parseInt(Math.sqrt(num))
+        for (let i = 2; i <= n; i++) {
+          if(num % i == 0) {
+            return false
+          }
+        }
+        return true
+      }
+
+      // 得到一个质数
+      getPrime(num) {
+        while(!this.isPrime(num)) {
+          num++
+        }
+        return num
+      }
+    
+    }
+
+    const hash = new HashTable()
+    hash.put('age', 18)
+    hash.put('sex', '男')
+    hash.put('name', 'mayuhang')
+    console.log(hash.limit);
+    hash.put('a', 18)
+    hash.put('b', '男')
+    hash.put('c', 'mayuhang')
+    console.log(hash.limit);
+    hash.delete('a')
+    hash.delete('b')
+    hash.delete('c')
+    console.log(hash.limit);
+    console.log(hash.count);
+    // alert(hash.get('name'))
+    // hash.put('name', 'zs')
+    // alert(hash.get('name'))
+    // hash.delete('name')
+    // alert(hash.get('name'))
+  </script>
+</body>
+</html>

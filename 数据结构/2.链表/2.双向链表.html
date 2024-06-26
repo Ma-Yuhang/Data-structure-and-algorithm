@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>双向链表</title>
+</head>
+<body>
+  <script>
+    class DoublyNode {
+      constructor(data) {
+        this.data = data
+        this.prev = null // 指向上一个节点
+        this.next = null // 指向下一个节点
+      }
+    }
+    // 双向链表
+    class DoublyLinkedList {
+      constructor() {
+        this.head = null // 头指针
+        this.tail = null // 尾指针
+        this.length = 0  // 链表长度
+      }
+
+      // append()
+      append(data) {
+        // 先创建一个节点
+        const node = new DoublyNode(data)
+        // 1.如果是第一个元素
+        if(this.length === 0) {
+          this.head = node
+          this.tail = node
+        }else {
+          // 2.不是第一个元素(这里跟单向链表不同，不需要遍历)
+          this.tail.next = node
+          node.prev = this.tail
+          this.tail = node
+        }
+        this.length++
+      }
+
+      // toString()
+      toString() {
+        let current = this.head
+        let doublyListString = ''
+        while (current) {
+          doublyListString += current.data + ' '
+          current = current.next
+        }
+        return doublyListString
+      }
+
+      // 反向的toString
+      reverseToString() {
+        let current = this.tail
+        let doublyListString = ''
+        while (current) {
+          doublyListString += current.data + ' '
+          current = current.prev
+        }
+        return doublyListString
+      }
+    
+      // insert()
+      insert(position, data) {
+        if(position < 0 || position > this.length) return false
+        const node = new DoublyNode(data)
+        // 1.长度等于0
+        if(this.length === 0) {
+          this.head = node
+          this.tail = node
+        }else {
+          // 2.长度不等于0
+          // 2.1 将元素插入到第一个位置
+          if(position === 0) {
+            // 先将原来的第一个的prev指向新创建的元素
+            this.head.prev = node
+            // 然后将新创建的元素的next指向原来的第一个
+            node.next = this.head
+            // 然后将新创建的元素修改为第一个
+            this.head = node
+          }else if(position === this.length) {
+            this.tail.next = node
+            node.prev = this.tail
+            this.tail = node
+          }else {
+            // 2.2 将元素插入到其他位置
+            let index = 0
+            let current = this.head
+            let previous = null
+            while(index++ < position) {
+              previous = current
+              current = current.next
+            }
+            node.next = current
+            current.prev = node
+            previous.next = node
+            node.prev = previous
+          }
+        }
+        this.length++
+        return true
+      }
+    
+      // get() 传入下标 返回元素
+      get(position) {
+        // 边界判断
+        if(position < 0 || position >= this.length) return null
+        // 如果this.length / 2 > position 应该从前向后遍历
+        // 如果this.length / 2 < position 应该从后向前遍历
+        let current
+        if(this.length / 2 > position) {
+          let index = 0
+          current = this.head
+          while(index++ < position) {
+            current = current.next
+          }
+        }else {
+          let index = this.length - 1
+          current = this.tail
+          while(index-- > position) {
+            current = current.prev
+          }
+        }
+        return current.data
+      }
+    
+      // indexOf() 传入元素 返回下标
+      indexOf(data) {
+        let index = 0
+        let current = this.head
+        while(current) {
+          if(data === current.data) {
+            return index
+          }
+          current = current.next
+          index++
+        }
+        return -1
+      }
+    
+      // update(position, data)
+      update(position, data) {
+        // 边界判断
+        if(position < 0 || position >= this.length) return null
+        const node = new DoublyNode(data)
+        let index
+        let current
+        // 如果this.length / 2 > position 应该从前向后遍历
+        if(this.length / 2 > position) {
+          index = 0
+          current = this.head
+          while(index++ < position) {
+            current = current.next
+          }
+        }else {
+          // 如果this.length / 2 < position 应该从后向前遍历
+          index = this.length - 1
+          current = this.tail
+          while(index-- > position) {
+            current = current.prev
+          }
+        }
+        current.data = node.data
+        return true
+      }
+    
+      // removeAt(position)
+      removeAt(position) {
+        if(position < 0 || position > this.length) return null
+        // 1.当只有一个节点的情况
+        let current
+        if(this.length === 1) {
+          current = this.head
+          this.head = null
+          this.tail = null
+        }else {
+          // 2.有多个节点
+          // 2.1 删除第一个节点
+          if(position === 0) {
+            current = this.head
+            this.head.next.prev = null
+            this.head = this.head.next
+          }else if(position === this.length - 1){
+            // 2.2 删除最后一个节点
+            current = this.tail
+            this.tail = this.tail.prev
+            this.tail.next = null
+          }else {
+            // 2.3 删除中间的某一个节点
+            let index = 0
+            let previous = null
+            current = this.head
+            while (index++ < position) {
+              previous = current
+              current = current.next
+            }
+            previous.next = current.next
+            current.next.prev = previous
+          }
+        }
+        this.length--
+        return current.data
+      }
+    
+      // remove()
+      remove(data) {
+        const index = this.indexOf(data)
+        this.removeAt(index)
+        return index
+      }
+    }
+
+    const doublyList = new DoublyLinkedList()
+    doublyList.append('a')
+    doublyList.append('b')
+    doublyList.append('c')
+    console.log(doublyList.toString()); // a b c
+    // console.log(doublyList.reverseToString()); // c b a
+    doublyList.insert(2,'zs')
+    console.log(doublyList.toString()); // a b zs c
+    console.log(doublyList.get(3)); // c
+    console.log(doublyList.indexOf('a')); // 0
+    doublyList.update(3, 'ls')
+    console.log(doublyList.toString()); // a b zs ls
+    console.log(doublyList.removeAt(0));  // 删除的那个元素 a
+    console.log(doublyList.toString()); // b zs ls
+    console.log(doublyList.remove('zs')); // 删除的zs所在的位置 1
+    console.log(doublyList.toString()); // b ls
+  </script>
+</body>
+</html>

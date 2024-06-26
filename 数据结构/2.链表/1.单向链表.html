@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 创建节点类
+    class Node {
+      constructor(data) {
+        this.data = data
+        this.next = null
+      }
+    }
+    class LinkedList {
+      constructor(){
+        // 头部
+        this.head = null
+        this.length = 0
+      }
+      // append() 向链表的末尾追加元素
+      append(data) {
+        const node = new Node(data)
+        if(this.length === 0) {
+          this.head = node
+        }else {
+          let current = this.head
+          console.log(current);
+          while (current.next) {
+            current = current.next
+          }
+          current.next = node
+        }
+        this.length += 1
+      }
+      
+      // toString 打印字符串
+      toString() {
+        let current = this.head
+        let listString = ''
+        while (current) {
+          listString += current.data + ' '
+          current = current.next
+        }
+        return listString
+      }
+    
+      // insert() 向指定位置插入元素
+      insert(position, data) {
+        // 要插入的位置不能是负数且不能大于链表的长度
+        if(position < 0 || position > this.length) return false
+        const node = new Node(data)
+        // 1.判断是不是插入到最开始
+        if(this.length === 0) {
+          this.head = node
+        }else {
+          if(position === 0) {
+          // 1.1先让新创建的节点指向当前的第一个元素
+          node = this.head // this.head就是指向第一个元素
+          // 1.2然后让this.head指向新创建的元素
+          this.head = node
+          }else {
+            // 2.不是插入到第一个
+            let index = 0
+            let current = this.head
+            let previous = null
+            while(index++ < position) {
+              previous = current
+              current = current.next
+            }
+            // 经过循环 previous是要插入位置的前一个元素
+            // 经过循环 current是要插入位置的后一个元素
+            previous.next = node
+            node.next = current
+          }
+        }
+        this.length += 1
+        return true
+      }
+    
+      // update() 修改指定位置元素
+      update(position, data) {
+        // 要修改的位置不能是负数且不能大于链表的长度
+        if(position < 0 || position >= this.length) return false
+        let index = 0
+        let current = this.head
+        while(index++ < position) {
+          current = current.next
+        }
+        // 经过循环 current就是要修改的元素
+        current.data = data
+        return true
+      }
+
+      // get() 传入下标 返回元素
+      get(position) {
+        // 1.越界判断
+        if(position < 0 || position >= this.length) return null
+        // 2.找出data
+        let index = 0
+        let current = this.head
+        while (index++ < position) {
+          current = current.next
+        }
+        // 经过循环 current就是要找的元素
+        return current.data
+
+      }
+    
+      // indexOf() 传入元素 返回下标
+      indexOf(data) {
+        let index = 0
+        let current = this.head
+        while (current) {
+          if(data == current.data){
+            return index
+          }
+          current = current.next
+          index++
+        }
+        // 经过循环 没找到元素
+        return -1
+      }
+
+      // removeAt() 传入下标 删除指定位置的元素
+      removeAt(position) {
+        if(position < 0 || position >= this.length) return null
+        let current = this.head
+        if(position === 0) {
+          current = current.next
+        }else {
+          let index = 0
+          let previous = null
+          while(index++ < position) {
+            previous = current
+            current = current.next
+          }
+          previous.next = current.next
+        }
+        this.length--
+        return current.data
+      }
+
+      // remove() 传入元素 删除元素
+      remove(data) {
+        if(data === this.head.data) {
+          this.head = this.head.next
+          return 0
+        }else {
+          let index = 0
+          let current = this.head
+          let previous = null
+          while(current) {
+            if(data === current.data){
+              previous.next = current.next
+              this.length--
+              return index
+            }
+            previous = current
+            current = current.next
+            index++
+          }
+          return false
+        }
+        // const index = this.indexOf(data)
+        // this.removeAt(index)
+        // return index
+      }
+
+    }
+
+    const list = new LinkedList()
+    list.append('a')
+    list.append('b')
+    // list.append('c')
+    console.log(list.toString()); // a b c
+    // list.insert(2, 'd')
+    // console.log(list.toString()); // a b d c
+    // list.update(2, 'zs')
+    // console.log(list.toString()); // a b zs c
+    // console.log(list.get(2));    // zs
+    // console.log(list.indexOf('zs')); // 2
+    // console.log(list.indexOf('s')); // -1
+    // list.removeAt(1)
+    // console.log(list.toString()); // a b zs c => a zs c
+    // console.log(list.remove('zs')); // 1 删除的zs在链表中的位置
+    // console.log(list.toString()); // a c
+    // console.log(list.length);
+  </script>
+</body>
+</html>
