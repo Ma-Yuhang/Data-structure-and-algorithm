@@ -1,27 +1,28 @@
 // 官方题解 定义上下左右
-var generateMatrix = function (n) {
-  let num = 1
-  let left = 0,
-    right = n - 1,
-    top = 0,
-    bottom = n - 1
-  let result = new Array(n).fill(0).map(() => new Array(n).fill(0))
-  while (count <= n ** 2) {
-    // 从左往右
-    for (let i = left; i <= right; i++) result[top][i] = num++
-    top++
-    // 从上往下
-    for (let i = top; i <= bottom; i++) result[i][right] = num++
-    right--
-    // 从右往左
-    for (let i = right; i >= left; i--) result[bottom][i] = num++
-    bottom--
-    // 从下往上
-    for (let i = bottom; i >= top; i--) result[i][left] = num++
-    left++
-  }
-  return result
-}
+// n行n列
+// var generateMatrix = function (n) {
+//   let num = 1
+//   let left = 0,
+//     right = n - 1,
+//     top = 0,
+//     bottom = n - 1
+//   let result = new Array(n).fill(0).map(() => new Array(n).fill(0))
+//   while (num <= n ** 2) {
+//     // 从左往右
+//     for (let i = left; i <= right; i++) result[top][i] = num++
+//     top++
+//     // 从上往下
+//     for (let i = top; i <= bottom; i++) result[i][right] = num++
+//     right--
+//     // 从右往左
+//     for (let i = right; i >= left; i--) result[bottom][i] = num++
+//     bottom--
+//     // 从下往上
+//     for (let i = bottom; i >= top; i--) result[i][left] = num++
+//     left++
+//   }
+//   return result
+// }
 
 // 2.定义循环圈数
 // var generateMatrix = function (n) {
@@ -63,4 +64,33 @@ var generateMatrix = function (n) {
 //   return res
 // }
 
-console.log(generateMatrix(3))
+// m行n列
+var generateMatrix = function (m, n) {
+  let num = 1
+  let row = 0
+  let col = 0
+  let stepRow = 0
+  let stepCol = 1
+  let result = new Array(m).fill(0).map(() => new Array(n).fill(0))
+  function _isBlock() {
+    return !result[row + stepRow] || result[row + stepRow][col + stepCol] !== 0
+  }
+  while (num <= m * n) {
+    result[row][col] = num++
+    // 如果遇到阻碍了，就拐弯
+    if (_isBlock()) {
+      // 如果之前是横向的，那么拐弯过后
+      if (stepRow === 0) {
+        stepRow = stepCol
+        stepCol = 0
+      } else {
+        stepCol = -stepRow
+        stepRow = 0
+      }
+    }
+    row += stepRow
+    col += stepCol
+  }
+  return result
+}
+console.log(generateMatrix(3, 4))
